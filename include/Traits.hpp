@@ -27,6 +27,7 @@ struct Traits<Type::GM> {
     constexpr static unsigned STONE_BORDER_WIDTH = 2; 
     const static sf::Color WHITE_COLOR;
     const static sf::Color BLACK_COLOR;
+    const static sf::Color RED_COLOR;
     const static sf::Color WHITE_OUTLINE_COLOR;
     const static sf::Color BLACK_OUTLINE_COLOR;
 };
