@@ -16,7 +16,7 @@ Demo::Transition Demo::onProcessInput(Input& input) {
                 int winner = check_game_won(move.row+1, move.column+1);
                 if(winner>-1){
                     std::cout << "!!!!!!!! PLAYER "<< winner << " WIN !!!!!!!!\n";
-                    // return {Transition::Type::CLOSE, this};
+                    return {Transition::Type::CLOSE, this};
                 }
                 currentPlayer = 1 - currentPlayer;
                 critical_places = find_four(move.row+1, move.column+1);
@@ -67,101 +67,40 @@ int Demo::check_game_won(int row, int column) {
     last_place = board[row][column];
     
     //pieces_in_row: -1 is done because find_piar() count two times the piece in last_place;
-    int pieces_in_row = last_place.find_piar(E, 5)+last_place.find_piar(W, 5)-1; // Horizontal
-    if(pieces_in_row >= 5)
-        return currentPlayer;
-    
-    pieces_in_row = last_place.find_piar(N, 5)+last_place.find_piar(S, 5)-1; // Vertical
-    if(pieces_in_row >= 5)
-        return currentPlayer;
-    
-    pieces_in_row = last_place.find_piar(NW, 5)+last_place.find_piar(SE, 5)-1; // Diagonal
-    if(pieces_in_row >= 5)
-        return currentPlayer;
-    
-    pieces_in_row = last_place.find_piar(NE, 5)+last_place.find_piar(SW, 5)-1; // Inverse Diagonal
-    if(pieces_in_row >= 5)
-        return currentPlayer;
-    
+    for(int i = 0; i <4; ++i){
+        int pieces_in_row = last_place.find_piar(i, 5)+last_place.find_piar(7-i, 5)-1; // i e 7-i iteram sobre um sentido e seu oposto, respectivamente
+        if(pieces_in_row >= 5)
+            return currentPlayer;
+    }    
     return -1;
 }
 
 std::vector<std::pair<int, int> > Demo::find_four(int row, int column) {
     Place last_place;
     last_place = board[row][column];
-
-//    printf("\nCheck E to W\n");
-    std::vector<std::pair<int, int> > critical_locations, temp_crit;
-    int tolerance = 1;
-    int pieces_in_row = last_place.wes_find_piar(E, 5, tolerance, temp_crit)-1;
-    pieces_in_row += last_place.wes_find_piar(W, 5 - pieces_in_row, tolerance, temp_crit);
     
-    if(pieces_in_row > 3) {
-        critical_locations.insert(critical_locations.begin(), temp_crit.begin(), temp_crit.end());
+    std::vector<std::pair<int, int> > critical_locations, temp_crit;
+    for(int i = 0; i <4; ++i){// i e 7-i iteram sobre um sentido e seu oposto, respectivamente
+        int tolerance = 1;
+        //Busca em um sentido <-. ->
+        int pieces_in_row = last_place.wes_find_piar(i, 5, tolerance, temp_crit)-1;
+        pieces_in_row += last_place.wes_find_piar(7-i, 5 - pieces_in_row, tolerance, temp_crit);
+    
+        if(pieces_in_row > 3) {
+            critical_locations.insert(critical_locations.begin(), temp_crit.begin(), temp_crit.end());
+        }
+        temp_crit.clear();
+        
+        //Busca em no sentido oposto ->, <-
+        tolerance = 1;
+        pieces_in_row = last_place.wes_find_piar(7-i, 5, tolerance, temp_crit)-1;
+        pieces_in_row += last_place.wes_find_piar(i, 5 - pieces_in_row, tolerance, temp_crit);
+        if(pieces_in_row > 3) {
+            critical_locations.insert(critical_locations.begin(), temp_crit.begin(), temp_crit.end());
+        }
+        temp_crit.clear();
     }
-    temp_crit.clear();
-
-//    printf("\nCheck W to E\n");
-    tolerance = 1;
-    pieces_in_row = last_place.wes_find_piar(W, 5, tolerance, temp_crit)-1;
-    pieces_in_row += last_place.wes_find_piar(E, 5 - pieces_in_row, tolerance, temp_crit);
-    if(pieces_in_row > 3) {
-        critical_locations.insert(critical_locations.begin(), temp_crit.begin(), temp_crit.end());
-    }
-    temp_crit.clear();
-
-//    printf("\nCheck S to N\n");
-    tolerance = 1;
-    pieces_in_row = last_place.wes_find_piar(S, 5, tolerance, temp_crit)-1;
-    pieces_in_row += last_place.wes_find_piar(N, 5 - pieces_in_row, tolerance, temp_crit);
-    if(pieces_in_row > 3) {
-        critical_locations.insert(critical_locations.begin(), temp_crit.begin(), temp_crit.end());
-    }
-    temp_crit.clear();
-
-//    printf("\nCheck N to S\n");
-    tolerance = 1;
-    pieces_in_row = last_place.wes_find_piar(N, 5, tolerance, temp_crit)-1;
-    pieces_in_row += last_place.wes_find_piar(S, 5 - pieces_in_row, tolerance, temp_crit);
-    if(pieces_in_row > 3) {
-        critical_locations.insert(critical_locations.begin(), temp_crit.begin(), temp_crit.end());
-    }
-    temp_crit.clear();
-
-//    printf("\nCheck NE to SW\n");
-    tolerance = 1;
-    pieces_in_row = last_place.wes_find_piar(NE, 5, tolerance, temp_crit)-1;
-    pieces_in_row += last_place.wes_find_piar(SW, 5 - pieces_in_row, tolerance, temp_crit);
-    if(pieces_in_row > 3) {
-        critical_locations.insert(critical_locations.begin(), temp_crit.begin(), temp_crit.end());
-    }
-    temp_crit.clear();
-
-//    printf("\nCheck SW to NE\n");
-    tolerance = 1;
-    pieces_in_row = last_place.wes_find_piar(SW, 5, tolerance, temp_crit)-1;
-    pieces_in_row += last_place.wes_find_piar(NE, 5 - pieces_in_row, tolerance, temp_crit);
-    if(pieces_in_row > 3) {
-        critical_locations.insert(critical_locations.begin(), temp_crit.begin(), temp_crit.end());
-    }
-    temp_crit.clear();
-
-//    printf("\nCheck NW to SE\n");
-    tolerance = 1;
-    pieces_in_row = last_place.wes_find_piar(NW, 5, tolerance, temp_crit)-1;
-    pieces_in_row += last_place.wes_find_piar(SE, 5 - pieces_in_row, tolerance, temp_crit);
-    if(pieces_in_row > 3) {
-        critical_locations.insert(critical_locations.begin(), temp_crit.begin(), temp_crit.end());
-    }
-    temp_crit.clear();
-
-//    printf("\nCheck SE to NW\n");
-    tolerance = 1;
-    pieces_in_row = last_place.wes_find_piar(SE, 5, tolerance, temp_crit)-1;
-    pieces_in_row += last_place.wes_find_piar(NW, 5 - pieces_in_row, tolerance, temp_crit);
-    if(pieces_in_row > 3) {
-        critical_locations.insert(critical_locations.begin(), temp_crit.begin(), temp_crit.end());
-    }
+    //A busca é feita nos dois sentidos pois podem existir peças identificadas e que não fazem parte da quadrupla
 
     return critical_locations;
 
