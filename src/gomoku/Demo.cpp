@@ -90,7 +90,7 @@ std::vector<std::pair<int, int> > Demo::find_four(int row, int column) {
     Place last_place;
     last_place = board[row][column];
 
-    printf("\nCheck E to W\n");
+//    printf("\nCheck E to W\n");
     std::vector<std::pair<int, int> > critical_locations, temp_crit;
     int tolerance = 1;
     int pieces_in_row = last_place.wes_find_piar(E, 5, tolerance, temp_crit)-1;
@@ -98,77 +98,69 @@ std::vector<std::pair<int, int> > Demo::find_four(int row, int column) {
     
     if(pieces_in_row > 3) {
         critical_locations.insert(critical_locations.begin(), temp_crit.begin(), temp_crit.end());
-     std::cout << "(" << critical_locations.front().first << ", "<< critical_locations.front().second << "\n";
     }
     temp_crit.clear();
 
-    printf("\nCheck W to E\n");
+//    printf("\nCheck W to E\n");
     tolerance = 1;
     pieces_in_row = last_place.wes_find_piar(W, 5, tolerance, temp_crit)-1;
     pieces_in_row += last_place.wes_find_piar(E, 5 - pieces_in_row, tolerance, temp_crit);
     if(pieces_in_row > 3) {
         critical_locations.insert(critical_locations.begin(), temp_crit.begin(), temp_crit.end());
-     std::cout << "(" << critical_locations.front().first << ", "<< critical_locations.front().second << "\n";
     }
     temp_crit.clear();
 
-    printf("\nCheck S to N\n");
+//    printf("\nCheck S to N\n");
     tolerance = 1;
     pieces_in_row = last_place.wes_find_piar(S, 5, tolerance, temp_crit)-1;
     pieces_in_row += last_place.wes_find_piar(N, 5 - pieces_in_row, tolerance, temp_crit);
     if(pieces_in_row > 3) {
         critical_locations.insert(critical_locations.begin(), temp_crit.begin(), temp_crit.end());
-     std::cout << "(" << critical_locations.front().first << ", "<< critical_locations.front().second << "\n";
     }
     temp_crit.clear();
 
-    printf("\nCheck N to S\n");
+//    printf("\nCheck N to S\n");
     tolerance = 1;
     pieces_in_row = last_place.wes_find_piar(N, 5, tolerance, temp_crit)-1;
     pieces_in_row += last_place.wes_find_piar(S, 5 - pieces_in_row, tolerance, temp_crit);
     if(pieces_in_row > 3) {
         critical_locations.insert(critical_locations.begin(), temp_crit.begin(), temp_crit.end());
-     std::cout << "(" << critical_locations.front().first << ", "<< critical_locations.front().second << "\n";
     }
     temp_crit.clear();
 
-    printf("\nCheck NE to SW\n");
+//    printf("\nCheck NE to SW\n");
     tolerance = 1;
     pieces_in_row = last_place.wes_find_piar(NE, 5, tolerance, temp_crit)-1;
     pieces_in_row += last_place.wes_find_piar(SW, 5 - pieces_in_row, tolerance, temp_crit);
     if(pieces_in_row > 3) {
         critical_locations.insert(critical_locations.begin(), temp_crit.begin(), temp_crit.end());
-     std::cout << "(" << critical_locations.front().first << ", "<< critical_locations.front().second << "\n";
     }
     temp_crit.clear();
 
-    printf("\nCheck SW to NE\n");
+//    printf("\nCheck SW to NE\n");
     tolerance = 1;
     pieces_in_row = last_place.wes_find_piar(SW, 5, tolerance, temp_crit)-1;
     pieces_in_row += last_place.wes_find_piar(NE, 5 - pieces_in_row, tolerance, temp_crit);
     if(pieces_in_row > 3) {
         critical_locations.insert(critical_locations.begin(), temp_crit.begin(), temp_crit.end());
-     std::cout << "(" << critical_locations.front().first << ", "<< critical_locations.front().second << "\n";
     }
     temp_crit.clear();
 
-    printf("\nCheck NW to SE\n");
+//    printf("\nCheck NW to SE\n");
     tolerance = 1;
     pieces_in_row = last_place.wes_find_piar(NW, 5, tolerance, temp_crit)-1;
     pieces_in_row += last_place.wes_find_piar(SE, 5 - pieces_in_row, tolerance, temp_crit);
     if(pieces_in_row > 3) {
         critical_locations.insert(critical_locations.begin(), temp_crit.begin(), temp_crit.end());
-     std::cout << "(" << critical_locations.front().first << ", "<< critical_locations.front().second << "\n";
     }
     temp_crit.clear();
 
-    printf("\nCheck SE to NW\n");
+//    printf("\nCheck SE to NW\n");
     tolerance = 1;
     pieces_in_row = last_place.wes_find_piar(SE, 5, tolerance, temp_crit)-1;
     pieces_in_row += last_place.wes_find_piar(NW, 5 - pieces_in_row, tolerance, temp_crit);
     if(pieces_in_row > 3) {
         critical_locations.insert(critical_locations.begin(), temp_crit.begin(), temp_crit.end());
-         std::cout << "(" << critical_locations.front().first << ", "<< critical_locations.front().second << "\n";
     }
 
     return critical_locations;

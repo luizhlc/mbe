@@ -58,22 +58,22 @@ int Place::wes_find_piar(int direction, int lvl, int& tolerance,
 
 int Place::wes_find_piar(int direction, int lvl, int color, int& tolerance, 
                         std::vector<std::pair<int, int> >& critical_locations) {
-    printf("Looking for a sequence of four...\n Tolerance is %d, Level is %d\n", tolerance, lvl);
+//    printf("Looking for a sequence of four...\n Tolerance is %d, Level is %d\n", tolerance, lvl);
     if (lvl < 1) {
-        printf("    End of sequence...\n");
+//        printf("    End of sequence...\n");
         // std::cout << "          TESTE 1.1.2.1a\n";
         return 0;
     } else if (tolerance > 0 && _owner == 0) {
         // std::cout << "          TESTE 1.1.2.b\n";
-        printf("    We have tolerance... Place is empty\n");
+//        printf("    We have tolerance... Place is empty\n");
         critical_locations.push_back(std::make_pair(_x,_y));
         tolerance--;
         return _neighborhood[direction]->wes_find_piar(direction, lvl-1, color, tolerance, critical_locations);
     } else if (color != _owner) {
-        printf("    We have no tolerance OR this place is owned by the enemy\n");
+//        printf("    We have no tolerance OR this place is owned by the enemy\n");
         return 0;
     } else {
-        printf("    Normal situation, continue looking\n");
+//        printf("    Normal situation, continue looking\n");
         return 1+_neighborhood[direction]->wes_find_piar(direction, lvl-1, color, tolerance, critical_locations);
     }        
 }
