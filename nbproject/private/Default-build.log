@@ -1,0 +1,7 @@
+[ mkdir ] Creating directory 'bin'
+[  g++  ] src/Traits.cpp -> .o
+[  g++  ] src/mbe/Engine.cpp -> .o
+[  g++  ] src/Main.cpp -> .o
+[  g++  ] src/gomoku/Place.cpp -> .o
+[  g++  ] src/gomoku/Demo.cpp -> .o
+[linking] bin/execute_me
