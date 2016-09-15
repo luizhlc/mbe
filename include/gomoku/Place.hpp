@@ -11,6 +11,7 @@
  * Created on August 31, 2016, 1:43 PM
  */
 #include <vector>
+#include <set>
 
 #ifndef CASA_H
 #define CASA_H
@@ -29,7 +30,19 @@ class Place {
     int get_x() { return _x; }
     int get_y() { return _y; }
 
+    int wes_find_piar_base(int, int, int, int&); // w/ empty spaces 
+    int wes_find_piar(int, int, int, int&); // vector r critical spaces
+
+    int wep_find_piar_base(int, int, int, int&); // w/ empty spaces 
+    int wep_find_piar(int, int, int, int&); // vector r critical spaces
+    
+    long long int score(int);
+
     void test_me();
+
+    Place* get_neighbor(int); 
+    int check_game_won();
+
  private:
     int _owner; // -1 = Wall; 0 = free; 1= Player 1; 2= Player 2;
     int _flags;

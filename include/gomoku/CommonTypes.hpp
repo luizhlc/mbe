@@ -6,8 +6,11 @@
 #include "Place.hpp"
 
 namespace go {
-    using Board = std::vector<std::vector<Place>>;
-
+    
+    struct Board {
+    	std::vector<std::vector<Place>> board;
+    	std::list<Place*> played_places;
+    };
 }
 
 #endif /* GO_COMMON_TYPES_HPP */

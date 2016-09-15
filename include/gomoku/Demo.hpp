@@ -48,20 +48,19 @@ class Demo : public mbe::Game::State {
     // O default inicializa os dois DemoPlayers com o default de DemoPlayer
     // (i.e., players humanos)
     Demo(Player&& p1 = Player(),
-         Player&& p2 = Player()) 
+         Player&& p2 = Player(new IA())) 
     : players{std::move(p1), std::move(p2)} {
-        board.reserve(Traits<Type::GOMOKU>::BOARD_DIMENSION+2);
+        _board.board.reserve(Traits<Type::GOMOKU>::BOARD_DIMENSION+2);
         generate_places(); 
         generate_neighbors();
     }
     
     // Um getter para simplificar as coisas, mas que poderia ser EVITADO
-    const std::list<Place*>& getPlayedPlaces() const { return played_places; }
+    std::list<Place*>& getPlayedPlaces() { return _board.played_places; }
     const std::vector<std::pair<int, int> > & getCriticalPlaces() const { return critical_places; }
 
+    go::Board & get_board() { return _board; }
     
-
-
 
  private:
     // O componente gráfico
@@ -71,10 +70,8 @@ class Demo : public mbe::Game::State {
     // Variável para guardar o jogador atual
     short currentPlayer = 0;
     // O tabuleiro
-    go::Board board;
+    go::Board _board;
     
-    //arrumar esta merda:
-    std::list<Place*> played_places;
     std::vector<std::pair<int, int> > critical_places;
 
     // Agora nosso onUpdateRenderer chama o update de graphics
@@ -94,5 +91,6 @@ class Demo : public mbe::Game::State {
 
     std::vector<std::pair<int, int> > find_four(int row, int column);
     
+
 };
 #endif

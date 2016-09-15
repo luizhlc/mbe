@@ -7,12 +7,12 @@ void Demo::onUpdateRenderer(Renderer& window) {
 
 Demo::Transition Demo::onProcessInput(Input& input) {
            // std::cout << "[CALL] Demo::onProcessInput" << std::endl;
-        auto move = players[currentPlayer].processInput(board, input);
+        auto move = players[currentPlayer].processInput(_board, input);
         // Jogadas fora do tabuleiro são respondidas com -1, -1
         if (move != gm::Position{-1, -1}) {
             // Verifica se a posição está desocupada
-            if (board[move.row+1][move.column+1].put_piece(currentPlayer+1)){ 
-                played_places.push_back(&board[move.row+1][move.column+1]); //MAS QUE NOJO
+            if (_board.board[move.row+1][move.column+1].put_piece(currentPlayer+1)){ 
+                _board.played_places.push_back(&_board.board[move.row+1][move.column+1]); //MAS QUE NOJO
                 int winner = check_game_won(move.row+1, move.column+1);
                 if(winner>-1){
                     std::cout << "!!!!!!!! PLAYER "<< winner << " WIN !!!!!!!!\n";
@@ -27,35 +27,35 @@ Demo::Transition Demo::onProcessInput(Input& input) {
 
 void Demo::generate_places() {
     for (unsigned i = 1; i < Traits<Type::GOMOKU>::BOARD_DIMENSION+1; ++i) {
-        board[i].reserve(Traits<Type::GOMOKU>::BOARD_DIMENSION+2);
-        board[i][0] = Place(-1, i, 0); // Wall O 
+        _board.board[i].reserve(Traits<Type::GOMOKU>::BOARD_DIMENSION+2);
+        _board.board[i][0] = Place(-1, i, 0); // Wall O 
         
         for (unsigned j = 1; j < Traits<Type::GOMOKU>::BOARD_DIMENSION+1; ++j) {
-            board[i][j] = Place(0, i, j); //playable places
+            _board.board[i][j] = Place(0, i, j); //playable places
         }
-        board[i][Traits<Type::GOMOKU>::BOARD_DIMENSION+1] = Place(-1, i, Traits<Type::GOMOKU>::BOARD_DIMENSION+1); // Wall L
+        _board.board[i][Traits<Type::GOMOKU>::BOARD_DIMENSION+1] = Place(-1, i, Traits<Type::GOMOKU>::BOARD_DIMENSION+1); // Wall L
     }
     
-    board[0].reserve(Traits<Type::GOMOKU>::BOARD_DIMENSION+2);
-    board[Traits<Type::GOMOKU>::BOARD_DIMENSION+1].reserve(Traits<Type::GOMOKU>::BOARD_DIMENSION+2);
+    _board.board[0].reserve(Traits<Type::GOMOKU>::BOARD_DIMENSION+2);
+    _board.board[Traits<Type::GOMOKU>::BOARD_DIMENSION+1].reserve(Traits<Type::GOMOKU>::BOARD_DIMENSION+2);
     
     for (unsigned i = 1; i < Traits<Type::GOMOKU>::BOARD_DIMENSION+1; ++i) {
-        board[0][i] = Place(-1, 0, i); // Wall N
-        board[Traits<Type::GOMOKU>::BOARD_DIMENSION+1][i] = Place(-1, Traits<Type::GOMOKU>::BOARD_DIMENSION+1, i); // Wall S
+        _board.board[0][i] = Place(-1, 0, i); // Wall N
+        _board.board[Traits<Type::GOMOKU>::BOARD_DIMENSION+1][i] = Place(-1, Traits<Type::GOMOKU>::BOARD_DIMENSION+1, i); // Wall S
     }
 
-    board[0][0] = Place(-1, 0, 0); // Wall NO
-    board[0][Traits<Type::GOMOKU>::BOARD_DIMENSION+1] = Place(-1, 0, Traits<Type::GOMOKU>::BOARD_DIMENSION+1); // Wall NL
-    board[Traits<Type::GOMOKU>::BOARD_DIMENSION+1][0] = Place(-1, Traits<Type::GOMOKU>::BOARD_DIMENSION+1, 0); // Wall SO
-    board[Traits<Type::GOMOKU>::BOARD_DIMENSION+1][Traits<Type::GOMOKU>::BOARD_DIMENSION+1] = Place(-1, Traits<Type::GOMOKU>::BOARD_DIMENSION+1, Traits<Type::GOMOKU>::BOARD_DIMENSION+1); // Wall SL
+    _board.board[0][0] = Place(-1, 0, 0); // Wall NO
+    _board.board[0][Traits<Type::GOMOKU>::BOARD_DIMENSION+1] = Place(-1, 0, Traits<Type::GOMOKU>::BOARD_DIMENSION+1); // Wall NL
+    _board.board[Traits<Type::GOMOKU>::BOARD_DIMENSION+1][0] = Place(-1, Traits<Type::GOMOKU>::BOARD_DIMENSION+1, 0); // Wall SO
+    _board.board[Traits<Type::GOMOKU>::BOARD_DIMENSION+1][Traits<Type::GOMOKU>::BOARD_DIMENSION+1] = Place(-1, Traits<Type::GOMOKU>::BOARD_DIMENSION+1, Traits<Type::GOMOKU>::BOARD_DIMENSION+1); // Wall SL
 }
 
 void Demo::generate_neighbors() {
     for (unsigned i = 1; i < 16; ++i) {
         for (unsigned j = 1; j < 16; ++j) {
-            board[i][j].generate_neighborhood({&board[i-1][j-1], &board[i-1][j], &board[i-1][j+1], 
-                                       &board[i][j-1],                    &board[i][j+1],
-                                       &board[i+1][j-1], &board[i+1][j], &board[i+1][j+1]
+            _board.board[i][j].generate_neighborhood({&_board.board[i-1][j-1], &_board.board[i-1][j], &_board.board[i-1][j+1], 
+                                       &_board.board[i][j-1],                    &_board.board[i][j+1],
+                                       &_board.board[i+1][j-1], &_board.board[i+1][j], &_board.board[i+1][j+1]
                                       });
         }
     }
@@ -64,7 +64,7 @@ void Demo::generate_neighbors() {
 int Demo::check_game_won(int row, int column) {
     
     Place last_place;
-    last_place = board[row][column];
+    last_place = _board.board[row][column];
     
     //pieces_in_row: -1 is done because find_piar() count two times the piece in last_place;
     for(int i = 0; i <4; ++i){
@@ -77,7 +77,7 @@ int Demo::check_game_won(int row, int column) {
 
 std::vector<std::pair<int, int> > Demo::find_four(int row, int column) {
     Place last_place;
-    last_place = board[row][column];
+    last_place = _board.board[row][column];
     
     std::vector<std::pair<int, int> > critical_locations, temp_crit;
     for(int i = 0; i <4; ++i){// i e 7-i iteram sobre um sentido e seu oposto, respectivamente
