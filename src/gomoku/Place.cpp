@@ -585,10 +585,13 @@ long long int Place::score(int level) {
     // int five_in_row = 0; // 11111 
     //b_two_in_row*10 
     // printf("end\n");
-    return  empty_space*5 + two_in_row*(1e2+50)
+    return empty_space*5 + two_in_row*(1e2+50)
             + bh_three_in_row*1e2 + gh_three_in_row*(1e3) + mgh_three_in_row*(1e3+2) + three_in_row*(1e3+100)
-            + b_four_in_row*(1e4-50) + bh_four_in_row*(1e3-50) + h_four_in_row*(1e5) + four_in_row*(1e7) + two_h_four_in_row*(1e7)
-            + five_in_row*(1e10)*(level+1);
+            + b_four_in_row*(1e4-50) + bh_four_in_row*(1e3-50) + h_four_in_row*(1e5) + four_in_row*(1e7) + two_h_four_in_row*(1e7-50)
+            + five_in_row*(1e10)*(level+1)
+            // + e_five_in_row*(1e10)*(level+1)
+            // + e_four_in_row*(1e6) + e_two_h_four_in_row*(1e6+100)
+            ;
 }
 
 int Place::check_game_won() {

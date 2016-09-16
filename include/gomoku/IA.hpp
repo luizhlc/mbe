@@ -35,7 +35,7 @@ class IA : public gm::PlayerHandler<go::Board> {
         
         std::set<Place*> playable_places = generate_positions(board);
         	// printf("MAX %d - Começo da iteração\n", level);
-        // printf("Consideradas a partir da raíz... \n");
+        printf("Consideradas a partir da raíz... \n");
         for (auto current_place : playable_places){ //para cada lugar possível
             
             // long long int path_score = 0;
@@ -75,7 +75,7 @@ class IA : public gm::PlayerHandler<go::Board> {
                 // printf("== PODA ==\n");
                 break; 
             }
-            // printf(", %lld", best_score);
+            printf(", %lld", best_score);
             // break;
         }
         // best_place->test_me();
@@ -115,8 +115,8 @@ class IA : public gm::PlayerHandler<go::Board> {
             best_score = std::numeric_limits<int>::lowest();
             for (auto current_place : playable_places){
             	// printf("MAX %lld - Começo da iteração MAX\n", level);
-                current_place->put_piece(2); //simula a jogada para Player 2  _ ATENCAO: 2 pq IA esta fixado como Player 2
                 board.played_places.push_back(current_place);
+                current_place->put_piece(2); //simula a jogada para Player 2  _ ATENCAO: 2 pq IA esta fixado como Player 2
                 // printf("Begin\n");
                 long long int child_score = current_place->score(level); //calculado antecipadamente, para computar score do Path
                 // printf("End\n");
@@ -144,9 +144,9 @@ class IA : public gm::PlayerHandler<go::Board> {
         } else {//MIN
             best_score = std::numeric_limits<int>::max();
             for (auto current_place : playable_places){
-            	// printf("MIN %d - Começo da iteração MIN\n", level);
-                current_place->put_piece(1); //simula a jogada para Player 1 _ ATENCAO: 1 pq Humano esta fixado como Player 1
+            	// printf("MIN %lld - Começo da iteração MIN\n", level);
                 board.played_places.push_back(current_place);
+                current_place->put_piece(1); //simula a jogada para Player 1 _ ATENCAO: 1 pq Humano esta fixado como Player 1
                 // printf("Begin\n");
                 long long int child_score = current_place->score(level);//calculado antecipadamente, para computar score do Path
                 // printf("End\n");
