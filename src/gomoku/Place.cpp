@@ -270,7 +270,20 @@ long long int Place::score(int level) {
                     mgh_three_in_row++;
                 }
             } else if  ( (left_owned == 0 &&  right_owned != 0) || (left_owned != 0 &&  right_owned == 0) ) {// X 1 1 1 0
-                bh_three_in_row++;
+                if( left_owned == 0 ) {
+                    if( current_l->_neighborhood[direction]->_owner == _owner ) { // X 1 1 1 0 1
+                        b_four_in_row++;
+                    } else {
+                        bh_three_in_row++;
+                    }
+                } else {
+                    if ( current_r->_neighborhood[7-direction]->_owner == _owner ) {
+                        b_four_in_row++;
+                    } else {
+                        bh_three_in_row++;
+                    }
+                }
+                //   bh_three_in_row++;
             }    
         } else if ( piar == 2) {
             if( left_owned == 0 && right_owned == 0 ) { // 0 1 1 0
@@ -289,7 +302,8 @@ long long int Place::score(int level) {
                 }
 
                 if( count_r > 1 && count_l > 1 ) { // 1 1 0 1 1 0 1 1 END
-                    two_h_four_in_row++;
+                    // two_h_four_in_row++;
+                    h_four_in_row++;
                 } else if ( count_r > 1 || count_l > 1 ) { // 1 1 0 1 1
                     h_four_in_row++;
                 } else if ( count_r == 1 && count_l == 1 ) {// 1 0 11 0 1
@@ -358,13 +372,25 @@ long long int Place::score(int level) {
                 }
 
                 if (count_r > 2 || count_l > 2) { // ? 0 1 0 1 1 1 ?
-                    if (count_r > count_l) {
+                    if (count_r > count_l) { // ? 0 1 0 1 1 1 ?
+                        if (skip_l->_owner == _owner) {
 
-                    } else if (count_l > count_r) {
+                        } else {
 
+                        }
+                    } else if (count_l > count_r) { // ? 1 1 1 0 1 0 ?
+                        if (skip_r->_owner == _owner) { // ? 1 1 1 0 1 0 1 ?
+
+                        } else {
+
+                        }
                     } else {  // 1 1 1 0 1 0 1 1 1
                         four_in_row++;
                     }
+                } else if (0) {
+
+                } else {
+
                 }
             } else if (left_owned == 0 || right_owned == 0) {
                 if (left_owned == 0) {
@@ -377,7 +403,181 @@ long long int Place::score(int level) {
             }
         }
     }
+/*
+    int e_two_in_row = 0;
+    int e_b_two_in_row = 0;
 
+    int e_bh_three_in_row = 0; // X 111 0
+    int e_mgh_three_in_row = 0; // X 0 111 0
+    int e_gh_three_in_row = 0; // 0 11 0 1 0
+    int e_three_in_row = 0; // 00 111 00 
+
+    int e_four_in_row = 0; // 0 1111 0
+    int e_h_four_in_row = 0; // 1 0 111 0
+    int e_bh_four_in_row = 0; // 1 0 11 0 1 
+    int e_two_h_four_in_row = 0; // 1 0 111 0 1 || 11 0 11 0 11
+    int e_b_four_in_row = 0;  // X 1111 0
+
+    int e_five_in_row = 0; // 11111 
+
+    for ( int direction = 0; direction < 4; direction++ ) {
+        int r_o, l_o;
+        int piar = 1; // própria casa = 1; // Pieces in a Row
+        Place* current_l = _neighborhood[direction];
+        Place* current_r = _neighborhood[7-direction];
+        // printf("A(%d, %d)\n", current_l->_x, current_l->_y);
+
+        auto left_owned = current_l->_owner;
+        auto right_owned = current_r->_owner;
+        while( left_owned == enemy ) {
+            current_l = current_l->_neighborhood[direction];
+            piar++;
+            left_owned = current_l->_owner;
+        }
+        // printf("end_A(%d, %d)\n", current_l->_x, current_l->_y);
+        // printf("B(%d, %d)\n", current_r->_x, current_r->_y);
+        while( right_owned == enemy ) {
+            current_r = current_r->_neighborhood[7-direction];
+            piar++;
+            right_owned = current_r->_owner;
+        }
+        // printf("end_B(%d, %d)\n", current_r->_x, current_r->_y);
+
+        if( piar >= 5 ) { // 1 1 1 1 1 
+            e_five_in_row++;
+        } else if ( piar == 4 ) { // 1 1 1 1 
+            if( left_owned == 0 && right_owned == 0 ) {// 0 1 1 1 1 0
+                e_four_in_row++;
+            } else if (left_owned == 0 || right_owned == 0) { // 0 1 1 1 1 X
+                e_b_four_in_row++;
+            }
+        } else if (piar == 3) {
+            if( left_owned == 0 && right_owned == 0 ) { // 0 1 1 1 0
+                auto right_skip = current_l->_neighborhood[direction]->_owner; 
+                auto left_skip = current_r->_neighborhood[7-direction]->_owner;
+                if( right_skip == enemy && left_skip == enemy) {// 1 0 1 1 1 0 1 DEAD
+                    e_two_h_four_in_row++;
+                } else if( right_skip == enemy || left_skip == enemy) { // 1 0 1 1 1 hope
+                    e_h_four_in_row++;
+                } else if ( right_skip ==  0 && left_skip == 0 ) {// 0 0 1 1 1 0 0 
+                    e_three_in_row++;
+                } else if (right_skip ==  0 || left_skip == 0) {// X 0 1 1 1 0
+                    e_mgh_three_in_row++;
+                }
+            } else if  ( (left_owned == 0 &&  right_owned != 0) || (left_owned != 0 &&  right_owned == 0) ) {// X 1 1 1 0
+                if( (l_o = current_l->_neighborhood[direction]->_owner) == enemy && left_owned == 0 ) { // X 1 1 1 0 1
+                    e_b_four_in_row++;
+                } else if ((r_o = current_r->_neighborhood[7-direction]->_owner) == enemy) {
+                    e_b_four_in_row++;
+                } else if (r_o == 0 || l_o == 0){ // x 1 1 1 0 
+                    e_bh_three_in_row++;
+                }
+            }    
+        } else if ( piar == 2) {
+            if( left_owned == 0 && right_owned == 0 ) { // 0 1 1 0
+                Place* skip_l = current_l->_neighborhood[direction]; 
+                int count_l = 0;
+                while( skip_l->_owner == enemy ) {
+                    skip_l = skip_l->_neighborhood[direction];
+                    count_l++;
+                }
+
+                Place* skip_r = current_r->_neighborhood[7-direction];
+                int count_r = 0;
+                while( skip_r->_owner == enemy ) {
+                    skip_r = skip_r->_neighborhood[direction];
+                    count_r++;
+                }
+
+                if( count_r > 1 && count_l > 1 ) { // 1 1 0 1 1 0 1 1 END
+                    e_two_h_four_in_row++;
+                } else if ( count_r > 1 || count_l > 1 ) { // 1 1 0 1 1
+                    e_h_four_in_row++;
+                } else if ( count_r == 1 && count_l == 1 ) {// 1 0 11 0 1
+                    e_bh_four_in_row++;
+                } else if ( (count_r == 1 && skip_r->_owner == 0) || (count_l == 1 && skip_l->_owner == 0) ) {// 0 11 0 1 0 
+                    e_gh_three_in_row++;
+                } else if ( (count_r == 1 && skip_r->_owner != 0) || (count_l == 1 && skip_l->_owner != 0) ) {// 0 11 0 1 X
+                    e_bh_three_in_row++;
+                } else if ( count_r == 0 && count_l==0 ) {// 0 11 0
+                    if (skip_r->_owner == 0 && skip_l->_owner == 0) { // 00 11 00
+                        e_two_in_row++;
+                    } else if ( (skip_r->_owner == 0 && skip_l->_owner != 0)  ||  (skip_r->_owner != 0 && skip_l->_owner == 0) ) { // X 0 11 00
+                        e_b_two_in_row++;
+                    }
+                } 
+            } else if ( left_owned == 0 || right_owned == 0 ) {
+                int var = left_owned == 0 ? 0 : 1;
+                int dir = abs(7*var-direction);
+
+                auto skip = var == 0 ? current_l->_neighborhood[dir] : current_r->_neighborhood[dir]; 
+                int count = 0;
+                while( skip->_owner == enemy ) {
+                    skip = skip->_neighborhood[dir];
+                    count++;
+                }
+
+                if (count > 1) {//X 11 0 11
+                    if( skip->_owner == 0) {//X 11 0 11 0
+                        if (skip->_neighborhood[dir]->_owner == enemy){//X 11 0 11 0 1
+                            e_h_four_in_row++;
+                        } else {//X 11 0 11 0 ?
+                            e_bh_four_in_row++;
+                        }
+                    }
+                } else if ( count == 1) {// X 11 0 1 
+                    if( skip->_owner == 0) {// X 11 0 1 0
+                        if (skip->_neighborhood[dir]->_owner == enemy){ // X 11 0 1 0 1
+                            e_bh_four_in_row++;
+                        } else if ( skip->_neighborhood[dir]->_owner == 0) {// X 11 0 1 00
+                            e_bh_three_in_row++;
+                        }
+                    }
+
+                } else {
+                    e_b_two_in_row++;
+                }
+            } else {
+                e_b_two_in_row++;
+            }
+        } else { //? 1 ?
+            // if (left_owned == 0 && right_owned == 0) { // ? 0 1 0 ?
+                
+            //     // Processo de Busca pela esquerda
+            //     Place* skip_l = current_l->_neighborhood[direction]; 
+            //     int count_l = 0;
+            //     while( skip_l->_owner == _owner ) {
+            //         skip_l = skip_l->_neighborhood[direction];
+            //         count_l++;
+            //     }
+            //     // Processo de Busca pela direita
+            //     Place* skip_r = current_r->_neighborhood[7-direction];
+            //     int count_r = 0;
+            //     while( skip_r->_owner == _owner ) {
+            //         skip_r = skip_r->_neighborhood[direction];
+            //         count_r++;
+            //     }
+
+            //     if (count_r > 2 || count_l > 2) { // ? 0 1 0 1 1 1 ?
+            //         if (count_r > count_l) {
+
+            //         } else if (count_l > count_r) {
+
+            //         } else {  // 1 1 1 0 1 0 1 1 1
+            //             four_in_row++;
+            //         }
+            //     }
+            // } else if (left_owned == 0 || right_owned == 0) {
+            //     if (left_owned == 0) {
+
+            //     } else {
+
+            //     }
+            // } else {
+
+            // }
+        }
+    }
     // for ( int direction = 0; direction < 4; direction++ ) {
     //     int piar = 1; // própria casa = 1;
     //     Place* current_l = _neighborhood[direction];
@@ -419,11 +619,14 @@ long long int Place::score(int level) {
 
     // int five_in_row = 0; // 11111 
     //b_two_in_row*10 
-    // printf("end\n");
+    // printf("end\n");*/
     return empty_space*5 + two_in_row*(1e2+50)
             + bh_three_in_row*1e2 + gh_three_in_row*(1e3) + mgh_three_in_row*(1e3+2) + three_in_row*(1e3+100)
-            + b_four_in_row*(1e4-50) + bh_four_in_row*(1e3-50) + h_four_in_row*(1e5) + four_in_row*(1e7) + two_h_four_in_row*(1e7)
-            + five_in_row*(1e10)*(level+1);
+            + b_four_in_row*(1e4-50) + bh_four_in_row*(1e3-50) + h_four_in_row*(1e5) + four_in_row*(1e7) + two_h_four_in_row*(1e7-50)
+            + five_in_row*(1e10)*(level+1)
+            //+ e_five_in_row*(1e10)*(level+1)
+            //+ e_four_in_row*(1e6)
+            ;
 }
 
 int Place::check_game_won() {
