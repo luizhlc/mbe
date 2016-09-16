@@ -14,10 +14,6 @@
       </df>
       <df name="build">
         <df name="src">
-          <df name="gomoku">
-          </df>
-          <df name="mbe">
-          </df>
         </df>
       </df>
       <df name="include">

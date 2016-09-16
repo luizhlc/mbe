@@ -35,12 +35,12 @@ class IA : public gm::PlayerHandler<go::Board> {
         
         std::set<Place*> playable_places = generate_positions(board);
         	// printf("MAX %d - Começo da iteração\n", level);
-        printf("Consideradas a partir da raíz... \n");
+        // printf("Consideradas a partir da raíz... \n");
         for (auto current_place : playable_places){ //para cada lugar possível
             
             // long long int path_score = 0;
             current_place->put_piece(2); //simula a jogada para Player 2  _ ATENCAO: 2 pq IA esta fixado como Player 2
-            // board.played_places.push_back(current_place);
+            board.played_places.push_back(current_place);
             // printf("Begin lvl 0 Score\n");
             // current_place->test_me();
             long long int child_score = current_place->score(level);//calculado antecipadamente, para computar score do Path
@@ -57,7 +57,7 @@ class IA : public gm::PlayerHandler<go::Board> {
             // printf("\tMAX - A jogada (%d, %d) vale:%lld \n", current_place->get_x(), current_place->get_y() ,  final_score);
             // printf("best: %lld\n", best_score);
             current_place->put_piece(0); //limpa a jogada após o retorno da recursão;
-            // board.played_places.pop_back();
+            board.played_places.pop_back();
 
             // printf("Jogada encontrada\n");
             // current_place->test_me();
@@ -75,7 +75,7 @@ class IA : public gm::PlayerHandler<go::Board> {
                 // printf("== PODA ==\n");
                 break; 
             }
-            printf(", %lld", best_score);
+            // printf(", %lld", best_score);
             // break;
         }
         // best_place->test_me();
@@ -115,8 +115,8 @@ class IA : public gm::PlayerHandler<go::Board> {
             best_score = std::numeric_limits<int>::lowest();
             for (auto current_place : playable_places){
             	// printf("MAX %lld - Começo da iteração MAX\n", level);
-                // board.played_places.push_back(current_place);
                 current_place->put_piece(2); //simula a jogada para Player 2  _ ATENCAO: 2 pq IA esta fixado como Player 2
+                board.played_places.push_back(current_place);
                 // printf("Begin\n");
                 long long int child_score = current_place->score(level); //calculado antecipadamente, para computar score do Path
                 // printf("End\n");
@@ -131,7 +131,7 @@ class IA : public gm::PlayerHandler<go::Board> {
                 }
                 // printf("\tMAX %lld - A jogada vale:%lld \n", level, final_score);
                 current_place->put_piece(0); //limpa a jogada após o retorno da recursão;
-                // board.played_places.pop_back();
+                board.played_places.pop_back();
                 if (final_score > alpha)
                     alpha = final_score;
                 if (final_score > best_score) {
@@ -144,9 +144,9 @@ class IA : public gm::PlayerHandler<go::Board> {
         } else {//MIN
             best_score = std::numeric_limits<int>::max();
             for (auto current_place : playable_places){
-            	// printf("MIN %lld - Começo da iteração MIN\n", level);
-                // board.played_places.push_back(current_place);
+            	// printf("MIN %d - Começo da iteração MIN\n", level);
                 current_place->put_piece(1); //simula a jogada para Player 1 _ ATENCAO: 1 pq Humano esta fixado como Player 1
+                board.played_places.push_back(current_place);
                 // printf("Begin\n");
                 long long int child_score = current_place->score(level);//calculado antecipadamente, para computar score do Path
                 // printf("End\n");
@@ -164,7 +164,7 @@ class IA : public gm::PlayerHandler<go::Board> {
             // if( !current_place->check_game_won() ) {
                 // printf("\tMIN %lld - A jogada vale:%lld \n", level, final_score);
                 current_place->put_piece(0); //limpa a jogada após o retorno da recursão;
-                // board.played_places.pop_back();
+                board.played_places.pop_back();
                 if (final_score < beta)
                     beta = final_score;
                 if (final_score < best_score)
@@ -204,7 +204,7 @@ class IA : public gm::PlayerHandler<go::Board> {
         	for(int i = 0; i < 8; ++i){
         		Place* first = played->get_neighbor(i);
         		if(first->get_owner()==-1)//se first for wall, não tente prosseguir
-        			break;
+        			continue;
         		Place* second = first->get_neighbor(i);
         		if(first->get_owner() == 0)
         			playable_places.insert(first);
