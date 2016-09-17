@@ -16,6 +16,7 @@ Demo::Transition Demo::onProcessInput(Input& input) {
                 int winner = check_game_won(move.row+1, move.column+1);
                 if(winner>-1){
                     std::cout << "!!!!!!!! PLAYER "<< winner << " WIN !!!!!!!!\n";
+                    while(1){}
                     return {Transition::Type::CLOSE, this};
                 }
                 currentPlayer = 1 - currentPlayer;

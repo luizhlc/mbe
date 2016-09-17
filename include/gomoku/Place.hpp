@@ -36,7 +36,7 @@ class Place {
     int wep_find_piar_base(int, int, int, int&); // w/ empty spaces 
     int wep_find_piar(int, int, int, int&); // vector r critical spaces
     
-    long long int score(int);
+    double score(int, int);
 
     void test_me();
 
