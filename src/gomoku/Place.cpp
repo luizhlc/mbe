@@ -599,20 +599,27 @@ double Place::score(int level, int function) {
     // int five_in_row = 0; // 11111 
     //b_two_in_row*10 
     // printf("end\n");*/
-    if(function==1){
-        return (empty_space*(1) + b_two_in_row*(50) + two_in_row*(150)
+    if(1){
+        return pow(empty_space*(1) + b_two_in_row*(50) + two_in_row*(150)
         + pow(100, bh_three_in_row) + pow(1e3, gh_three_in_row) + pow(1e4, three_in_row)
         + pow(1e5-50, bh_four_in_row) + pow(1e6, b_four_in_row) + pow(1e7, h_four_in_row) + pow(1e8, two_h_four_in_row) + pow(1e9, four_in_row)
         + pow(1e20, five_in_row)
         + pow(1e10, e_five_in_row)
-        + pow(1e2, e_four_in_row))*(level+1)
+        + pow(1e8, e_four_in_row),(level+1))
          ;
     }
-         return empty_space*5 + two_in_row*(1e2+50)
-            + bh_three_in_row*1e2 + gh_three_in_row*(1e3) + mgh_three_in_row*(1e3+2) + three_in_row*(1e3+100)
-            + b_four_in_row*(1e4-50) + bh_four_in_row*(1e3-50) + h_four_in_row*(1e5) + four_in_row*(1e7) + two_h_four_in_row*(1e7-50)
-            + five_in_row*(1e20)
-            ;
+    // return pow(empty_space*(1) + b_two_in_row*(50) + two_in_row*(150)
+    //     + pow(100, bh_three_in_row) + pow(1e3, gh_three_in_row) + pow(1e4, three_in_row)
+    //     + pow(1e5-50, bh_four_in_row) + pow(1e6, b_four_in_row) + pow(1e7, h_four_in_row) + pow(1e8, two_h_four_in_row) + pow(1e9, four_in_row)
+    //     + pow(1e20, five_in_row)
+    //     + pow(1e10, e_five_in_row)
+    //     + pow(1e8, e_four_in_row),(level+1))
+    //      ;
+         // return empty_space*5 + two_in_row*(1e2+50)
+         //    + bh_three_in_row*1e2 + gh_three_in_row*(1e3) + mgh_three_in_row*(1e3+2) + three_in_row*(1e3+100)
+         //    + b_four_in_row*(1e4-50) + bh_four_in_row*(1e3-50) + h_four_in_row*(1e5) + four_in_row*(1e7) + two_h_four_in_row*(1e7-50)
+         //    + five_in_row*(1e20)
+         //    ;
     // return empty_space*(1) + b_two_in_row*(50) + two_in_row*(150)
     //     + pow(100, bh_three_in_row) + pow(1e3, gh_three_in_row) + pow(1e4, three_in_row)
     //     + pow(1e5-50, bh_four_in_row) + pow(1e6, b_four_in_row) + pow(1e7, h_four_in_row) + pow(1e8, two_h_four_in_row) + pow(1e9, four_in_row)

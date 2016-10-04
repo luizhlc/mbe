@@ -47,7 +47,7 @@ class Demo : public mbe::Game::State {
     // devido ao uso de std::unique_ptr na classe DemoPlayers
     // O default inicializa os dois DemoPlayers com o default de DemoPlayer
     // (i.e., players humanos)
-    Demo(Player&& p1 = Player(new IA()),
+    Demo(Player&& p1 = Player(),
          Player&& p2 = Player(new IA())) 
     : players{std::move(p1), std::move(p2)} {
         _board.board.reserve(Traits<Type::GOMOKU>::BOARD_DIMENSION+2);
